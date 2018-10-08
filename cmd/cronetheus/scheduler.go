@@ -70,6 +70,7 @@ func jobTemplate(cron_id string, uname string, binary string, args string) {
 	cmdErrBytes, _ := ioutil.ReadAll(stderrIn)
 	if len(cmdErrBytes) > 0 {
 		glog.Errorf("Cron %s returned errors: %q", cron_id, string(cmdErrBytes))
+		failedCronJobs.WithLabelValues(cron_id, uname).Inc()
 	}
 
 	cmdErr := cmd.Wait()
