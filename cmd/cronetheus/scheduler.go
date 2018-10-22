@@ -63,6 +63,7 @@ func jobTemplate(cron_id string, uname string, binary string, args string) {
 	fullCommand := fmt.Sprintf("%s %s", path, args)
 	cmd := exec.Command("/bin/bash", "-c", fullCommand)
 	stderrIn, _ := cmd.StderrPipe()
+	stdoutIn, _ := cmd.StdoutPipe()
 	cmd.SysProcAttr = &syscall.SysProcAttr{}
 	cmd.SysProcAttr.Credential = &syscall.Credential{Uid: uint32(uidInt), Gid: uint32(gidInt)}
 	cmd.Start()
@@ -73,9 +74,15 @@ func jobTemplate(cron_id string, uname string, binary string, args string) {
 		failedCronJobs.WithLabelValues(cron_id, uname).Inc()
 	}
 
+	cmdOutBytes, _ := ioutil.ReadAll(stdoutIn)
+	if len(cmdOutBytes) > 0 {
+		glog.V(1).Infof("Output of cron %s: %q", cron_id, string(cmdOutBytes))
+	}
+
 	cmdErr := cmd.Wait()
 	if cmdErr != nil {
 		glog.Errorf("Error running %s, %q", cron_id, cmdErr)
+		failedCronJobs.WithLabelValues(cron_id, uname).Inc()
 	}
 }
 
