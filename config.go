@@ -214,3 +214,11 @@ func SliceExists(slice interface{}, item interface{}) bool {
 	}
 	return false
 }
+
+func (c Config) String() string {
+	b, err := yaml.Marshal(c)
+	if err != nil {
+		return fmt.Sprintf("Error creating config string: %s", err)
+	}
+	return string(b)
+}
