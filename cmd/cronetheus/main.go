@@ -29,6 +29,7 @@ func main() {
 
 	http.Handle("/metrics", promhttp.Handler())
 	http.HandleFunc("/config", ConfigHandlerFunc(c))
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) { http.Error(w, "OK", http.StatusOK) })
 
 	cron, _ := Schedule(c)
 	cron.Start()
