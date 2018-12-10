@@ -1,8 +1,9 @@
 GO := go
+GOLINT := golint
 
 PACKAGES := $(shell $(GO) list ./... | grep -v /vendor/)
 
-all: clean format build
+all: clean format lint build
 
 clean:
 	@echo ">> cleaning"
@@ -11,6 +12,10 @@ clean:
 format:
 	@echo ">> formatting code"
 	@$(GO) fmt $(PACKAGES)
+
+lint:
+	@echo ">> running golint"
+	@$(GOLINT) $(PACKAGES)
 
 build:
 	@echo ">> building binaries"

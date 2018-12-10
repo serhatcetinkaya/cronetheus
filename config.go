@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-// Schedule struct defines the default running schedule configuration for the cron jobs (i.e */2 * * * *)
+// CronSchedule struct defines the default running schedule configuration for the cron jobs (i.e */2 * * * *)
 type CronSchedule struct {
 	Second     string                 `yaml:"second"`
 	Minute     string                 `yaml:"minute"`
@@ -40,6 +40,7 @@ type Config struct {
 	sync.Mutex
 }
 
+// DefaultCronSchedule is a CronSchedule with "*" on all fields
 var DefaultCronSchedule = CronSchedule{
 	Second:     "*",
 	Minute:     "*",
@@ -49,6 +50,7 @@ var DefaultCronSchedule = CronSchedule{
 	DayOfWeek:  "*",
 }
 
+// EmptyCronSchedule is a CronSchedule with empty fields
 var EmptyCronSchedule = CronSchedule{
 	Second:     "",
 	Minute:     "",
@@ -58,7 +60,7 @@ var EmptyCronSchedule = CronSchedule{
 	DayOfWeek:  "",
 }
 
-// Compare two CronSchedule's
+// Equals compares two CronSchedules
 func (cs *CronSchedule) Equals(other *CronSchedule) bool {
 	return (cs.Second == other.Second && cs.Minute == other.Minute && cs.Hour == other.Hour && cs.DayOfMonth == other.DayOfMonth && cs.Month == other.Month && cs.DayOfWeek == other.DayOfWeek)
 }
@@ -76,9 +78,9 @@ func (jc *JobConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 
 	// if given descriptor is not valid (check unix man page for cron) return error
-	valid_descriptors := []string{"@yearly", "@annually", "@monthly", "@weekly", "@daily", "@midnight", "@hourly"}
+	validDescriptors := []string{"@yearly", "@annually", "@monthly", "@weekly", "@daily", "@midnight", "@hourly"}
 
-	if jc.Descriptor != "" && !SliceExists(valid_descriptors, jc.Descriptor) {
+	if jc.Descriptor != "" && !SliceExists(validDescriptors, jc.Descriptor) {
 		// if given descriptor is @every, a duration should be given as well
 		// if given duration for @every descriptor is below a second return an error
 		if strings.HasPrefix(jc.Descriptor, "@every") {
@@ -158,7 +160,7 @@ func (c *Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 	// make sure cron_id's are unique, since they will be exposed as labels in metrics
 	ids := make(map[string]int)
-	for k, _ := range c.CronConfig {
+	for k := range c.CronConfig {
 		if _, ok := ids[c.CronConfig[k].CronID]; ok {
 			return fmt.Errorf("Error CronID's must be unique, found duplicate for: %q", c.CronConfig[k].CronID)
 		}
@@ -168,6 +170,7 @@ func (c *Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return checkOverflow(c.XXX, "config")
 }
 
+// Init function loads the config file
 func (c *Config) Init(filename string) error {
 	c.Lock()
 	defer c.Unlock()

@@ -12,6 +12,7 @@ import (
 	"syscall"
 )
 
+// Schedule creates a cron object from the given config file and returns a cron object and error
 func Schedule(c *cronetheus.Config) (*cron.Cron, error) {
 	cr := cron.New()
 	// add a func to the cron.Cron object for every block in the config
@@ -43,7 +44,7 @@ func getUID(uname string) (string, string, error) {
 	return user.Uid, user.Gid, nil
 }
 
-func jobTemplate(cron_id string, uname string, binary string, args string) {
+func jobTemplate(cronID string, uname string, binary string, args string) {
 	uid, gid, idErr := getUID(uname)
 	if idErr != nil {
 		glog.Errorf("Error getting userID: %q", idErr)
@@ -70,19 +71,19 @@ func jobTemplate(cron_id string, uname string, binary string, args string) {
 
 	cmdErrBytes, _ := ioutil.ReadAll(stderrIn)
 	if len(cmdErrBytes) > 0 {
-		glog.Errorf("Cron %s returned errors: %q", cron_id, string(cmdErrBytes))
-		failedCronJobs.WithLabelValues(cron_id, uname).Inc()
+		glog.Errorf("Cron %s returned errors: %q", cronID, string(cmdErrBytes))
+		failedCronJobs.WithLabelValues(cronID, uname).Inc()
 	}
 
 	cmdOutBytes, _ := ioutil.ReadAll(stdoutIn)
 	if len(cmdOutBytes) > 0 {
-		glog.V(1).Infof("Output of cron %s: %q", cron_id, string(cmdOutBytes))
+		glog.V(1).Infof("Output of cron %s: %q", cronID, string(cmdOutBytes))
 	}
 
 	cmdErr := cmd.Wait()
 	if cmdErr != nil {
-		glog.Errorf("Error running %s, %q", cron_id, cmdErr)
-		failedCronJobs.WithLabelValues(cron_id, uname).Inc()
+		glog.Errorf("Error running %s, %q", cronID, cmdErr)
+		failedCronJobs.WithLabelValues(cronID, uname).Inc()
 	}
 }
 
