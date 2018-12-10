@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"reflect"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -36,6 +37,7 @@ type JobConfig struct {
 type Config struct {
 	CronConfig []JobConfig            `yaml:"cron_config"`
 	XXX        map[string]interface{} `yaml:",inline"` // Catches all undefined fields and must be empty after parsing.
+	sync.Mutex
 }
 
 var DefaultCronSchedule = CronSchedule{
@@ -166,27 +168,19 @@ func (c *Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return checkOverflow(c.XXX, "config")
 }
 
-func LoadConfig(s string) (*Config, error) {
-	cfg := &Config{}
-	err := yaml.Unmarshal([]byte(s), cfg)
-	if err != nil {
-		return nil, err
-	}
-	return cfg, nil
-}
-
-func LoadConfigFile(filename string) (*Config, error) {
+func (c *Config) Init(filename string) error {
+	c.Lock()
+	defer c.Unlock()
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
 		glog.Errorf("Error reading config file: %q", filename)
-		return nil, err
+		return err
 	}
-	cfg, err := LoadConfig(string(content))
+	err = yaml.Unmarshal([]byte(string(content)), c)
 	if err != nil {
-		glog.Errorf("Error loading config from file: %q", filename)
-		return nil, err
+		return err
 	}
-	return cfg, nil
+	return nil
 }
 
 // checkOverflow func to check if there are extra unknown fields
