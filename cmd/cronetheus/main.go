@@ -56,6 +56,6 @@ func main() {
 // ConfigHandlerFunc is the HTTP handler for the `/config` page. It outputs the configuration marshaled in YAML format.
 func ConfigHandlerFunc(config *cronetheus.Config) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, config.String(), r.URL.Path)
+		fmt.Fprintf(w, "%s\n"+config.String(), "cron_config:")
 	}
 }
