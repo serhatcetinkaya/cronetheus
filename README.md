@@ -7,7 +7,7 @@ Cronetheus is a tool to schedule your cron jobs. It exposes a prometheus metric 
 ## Installation
 
 ```
-go get -u github.com/serhatck/cronetheus
+go get -u github.com/serhatcetinkaya/cronetheus
 ```
 
 ## Usage

@@ -19,5 +19,5 @@ lint:
 
 build:
 	@echo ">> building binaries"
-	@GOOS=linux GOARCH=amd64 $(GO) build github.com/serhatck/cronetheus/cmd/cronetheus
+	@GOOS=linux GOARCH=amd64 $(GO) build github.com/serhatcetinkaya/cronetheus/cmd/cronetheus
 

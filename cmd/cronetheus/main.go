@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/serhatck/cronetheus"
+	"github.com/serhatcetinkaya/cronetheus"
 	"net/http"
 	"os"
 	"os/signal"

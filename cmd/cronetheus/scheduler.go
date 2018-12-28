@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/golang/glog"
 	"github.com/robfig/cron"
-	"github.com/serhatck/cronetheus"
+	"github.com/serhatcetinkaya/cronetheus"
 	"io/ioutil"
 	"os/exec"
 	"os/user"
