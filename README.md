@@ -50,12 +50,12 @@ cron_config:
     binary: "rm"
     args: "-rf /tmp/test"
     schedule:
-			second: "30"
-			minute: "*"
+      second: "30"
+      minute: "*"
       hour: "*"
-			day_of_month: "*"
-			month: "*"
-			day_of_week: "*"
+      day_of_month: "*"
+      month: "*"
+      day_of_week: "*"
 ```
 
 To schedule any given cron job you can either specify a descriptor or specify a cron schedule. The minimum resolution for any cron job schedule is 1 second. If both descriptor keyword and schedule is defined for a cron job only descriptor would be used schedule would be omitted. For schedule format please check [CRON Expression Format](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format). Valid descriptor keywords are `"@yearly", "@annually", "@monthly", "@weekly", "@daily", "@midnight", "@hourly"`.
