@@ -14,7 +14,7 @@ import (
 
 func main() {
 	configFile := flag.String("config", "config.yaml", "The Cronetheus config file")
-	port := flag.String("port", ":9375", "Address on which to expose metrics and web interface. (defaults to \":9375\")")
+	port := flag.String("port", ":9375", "Address on which to expose metrics and web interface.")
 
 	// -alsologtostderr is true by default
 	if alsoLogToStderr := flag.Lookup("alsologtostderr"); alsoLogToStderr != nil {
