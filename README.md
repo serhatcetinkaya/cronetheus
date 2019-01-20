@@ -15,7 +15,7 @@ go get -u github.com/serhatcetinkaya/cronetheus/cmd/cronetheus
 After installing cronetheus you can run it from the command line, it needs sudo permissions to find the UID and GID of the unix user that specified in the config.
 
 ```
-# cronetheus -config config.yaml -port :9375
+# cronetheus -config config.yaml -port :9535
 ```
 
 You can get the metrics from `/metrics`, health status from `/health` and config from `/config` endpoints.
