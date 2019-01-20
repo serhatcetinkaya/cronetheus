@@ -1,5 +1,7 @@
 # Cronetheus
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/serhatcetinkaya/cronetheus)](https://goreportcard.com/report/github.com/serhatcetinkaya/cronetheus) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 ## Overview
 
 Cronetheus is a tool to schedule your cron jobs. It exposes a prometheus metric for cron jobs that has failed so that you can keep track of them and create alert on them. 
